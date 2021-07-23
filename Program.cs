@@ -35,6 +35,11 @@ namespace Homework_Theme_04
                         Ex3 ex3 = new Ex3();
                         break;
                     }
+                case 4:
+                    {
+                        Ex4 ex4 = new Ex4();
+                        break;
+                    }
             }
         }
     }

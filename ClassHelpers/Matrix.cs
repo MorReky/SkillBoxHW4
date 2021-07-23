@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Console;
@@ -15,18 +17,20 @@ namespace Homework_Theme_04.ClassHelpers
 
         public Matrix()
         {
-            WriteLine("Введите количество столбцов матрицы:");
-            Columns = Convert.ToInt32(ReadLine());
-            WriteLine("Введите количество строк матрицы:");
-            Rows = Convert.ToInt32(ReadLine());
-            matrix = FillingMatrix();
+            //WriteLine("Введите количество столбцов матрицы:");
+            //Columns = Convert.ToInt32(ReadLine());
+            //WriteLine("Введите количество строк матрицы:");
+            //Rows = Convert.ToInt32(ReadLine());
+            //matrix = FillingMatrix();
         }
 
-        public Matrix(int rows,int columns)
+        public Matrix(int rows, int columns)
         {
             Rows = rows;
             Columns = columns;
-            matrix = FillingMatrix(0);
+            //На момент решения задачи номер 4 внесла данную строку в комментарии. Так как 4 задание подразумевает предобработку,
+            //то функция заполнения матриц здесь не нужна
+            // matrix = FillingMatrix(0);
         }
 
         internal void PrintMatrixOnConsole()
@@ -91,7 +95,38 @@ namespace Homework_Theme_04.ClassHelpers
                     matrix1.matrix[i, a] = matrix1.matrix[i, a] + matrix2.matrix[i, a];
             }
             return matrix1;
-
         }
+        ///// <summary>
+        ///// Метод перемножения матриц
+        ///// </summary>
+        ///// <param name="matrix1">Матрица 1</param>
+        ///// <param name="matrix2">Матрица 2</param>
+        ///// <param name="CallerMember">Имя вызывающего метода, который будет вызван вновь при неудачной попытке перемножения</param>
+        ///// <returns></returns>
+        //public Matrix MultiplMatrices(Matrix matrix1, Matrix matrix2, [CallerMemberName] string CallerMember = null)
+        //{
+        //    Matrix matrix3 = new Matrix(matrix2.Columns, matrix1.Rows);
+        //    //А хрен знает сработает ли
+        //    MethodInfo mi = GetType().GetMethod(CallerMember);
+        //    if (matrix1.Columns != matrix2.Rows)
+        //    {
+        //        WriteLine("Размерности матриц не совпадают. Для выполнения перемножения количество столбцов в матрице 1 должно равняться количеству строк в матрице 2\nПожалуйстта, повторите попытку.");
+        //        ReadLine();
+        //        WriteLine("Начинаю перезапуск программы...");
+        //        //А хрен знает сработает ли
+        //        mi.Invoke(this, null);
+        //    }
+        //    for (int i = 0; i < matrix2.Columns; i++)
+        //    {
+        //        for (int a = 0; a < matrix2.Rows; a++)
+        //        {
+        //            for (int c = 0; c < matrix1.Columns; c++)
+        //            {
+        //                matrix3.matrix[i, a] += matrix1.matrix[i, a] * matrix2.matrix[a, c];
+        //            }
+        //        }
+        //    }
+        //    return matrix3;
+        //}
     }
 }
