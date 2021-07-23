@@ -45,65 +45,66 @@ namespace Homework_Theme_04
             ReadLine();
 
         }
-        //Проверено.
         private void СombinationStart()
         {
-            //Получаем первую порций сочетаний. Например, 5 из 2 или 2 из 3
+            //Получаем индексы первых возможных множетелей и добавляем их в в список возможного решения
             for (int i = 0; i < N - 1; i++)
             {
                 MultiplOrderClassHelper multiplOrderClass = new MultiplOrderClassHelper();
-                for (int a = 0; a < N; a++)
-                {
-                    if (a == i)
-                        continue;
-                    //Я думаю, что это как-то можно сократить, избавившись от переменной var.
-                    //Применяя сокращенные операторы, скрываются операторы выхода из цикла
-                    var MatrixVR = MatricesMultipl(matrices[i], matrices[a]);
-                    if (MatrixVR is null)
-                        continue;
-                    multiplOrderClass.Intermediate = MatrixVR;
-
-                    multiplOrderClass.Priority.Add(i);
-                    multiplOrderClass.Priority.Add(a);
-
-                    MultiplOrder.Add(multiplOrderClass);
-                }
+                multiplOrderClass.Priority.Add(i);
+                multiplOrderClass.Intermediate = matrices[i];
+                multiplOrderClass.Index = i;
+                MultiplOrder.Add(multiplOrderClass);
             }
-            for (int i = 0; i < MultiplOrder.Count; i++)
+            for (int index=0;index< MultiplOrder.Count;index++)
             {
-                if (MultiplOrder[i].Priority.Count() == N)
-                    return;
-                Combination(i);
+                Combination(MultiplOrder[index]);
             }
         }
-        private void Combination(int index)
+        //Реализация основной логики
+        private void Combination(MultiplOrderClassHelper obj)
         {
-            int v = MultiplOrder[index].Priority.Count();
-            //перебираем сочетания?
-            for (int i = 0; i < v; i++)
+            //определяем количество возможных множителей.
+            //Балуюсь списками, т.к. мы здесь не можем заранее знать сколько множителей у того или иного сочетания может быть:D
+            List<int> PossibleMultipl = new List<int>();
+            //Выбор следующего множителя
+            for (int a = 0; a < N; a++)
             {
-                //массив для определения оставшихся вариантов умножения
-                //Массив определяется верно. Встает вопрос о рациональности вызова рекурсии
-                //и последующего кода, т.к. добавляется значение по порядку
-                //а это значит, что может получится повторение матрицы
-                List <int> vr = new List<int>(N-v);
-                //перечисляем все матрицы для перемножения
-                for (int a = 0; a < N; a++)
+                //Проверка на задвоение матриц при перемножении
+                if (obj.Priority.Contains(a))
+                    continue;
+                else
                 {
-                    if (a == i)
+                    //проверка на возможность умножения выбранного элемента
+                    if (MatricesMultipl(obj.Intermediate, matrices[a]) is null)
                         continue;
-                    vr.Add(a);
-                }
-                for(int a=0;a<vr.Count()-1;a++)
-                {
-                    var MatrixVR = MatricesMultipl(MultiplOrder[index].Intermediate, matrices[a]);
-                    if (MatrixVR is null)
-                        continue;
-                    MultiplOrder[index].Intermediate = MatrixVR;
-                    MultiplOrder[index].Priority.Add(vr[a]);
+                    else
+                        PossibleMultipl.Add(a);
                 }
             }
+            //Условие для добавления следующего "Нода"(условно)
+            if (PossibleMultipl.Count > 1)
+            {
+                for (int IndexMultipl = 1; IndexMultipl < PossibleMultipl.Count; IndexMultipl++)
+                {
+                    MultiplOrderClassHelper multiplOrder = new MultiplOrderClassHelper();
+                    multiplOrder = obj;
+                    multiplOrder.Index = MultiplOrder.Last().Index + 1;
+                    multiplOrder.Priority.Add(PossibleMultipl[IndexMultipl]);
+                    MultiplOrder.Add(multiplOrder);
+                }
+            }
+            if (PossibleMultipl.Count == 0)
+                return;
+            obj.Intermediate = MatricesMultipl(obj.Intermediate, matrices[PossibleMultipl[0]]);
+            obj.Priority.Add(PossibleMultipl[0]);
+            //Конечно, здесь можно почистить, но мне лень=D
+            MultiplOrder.Find(x => x.Index == obj.Index).Intermediate = obj.Intermediate;
+            MultiplOrder.Find(x => x.Index == obj.Index).Priority = obj.Priority;
+            MultiplOrder.Find(x => x.Index == obj.Index).NumbOfMultipl = obj.NumbOfMultipl;
+
         }
+
         //Вспомогательный метод для определения размерности после перемножения
         public Matrix MatricesMultipl(Matrix matrix1, Matrix matrix2)
         {
