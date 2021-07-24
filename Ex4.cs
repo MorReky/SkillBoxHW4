@@ -34,7 +34,7 @@ namespace Homework_Theme_04
             N = Convert.ToInt32(ReadLine());
             for (int i = 0; i < N; i++)
             {
-                WriteLine($"Ввод размерности матрицы {N + 1}:");
+                WriteLine($"Ввод размерности матрицы {i + 1}:");
                 WriteLine("Размерность по x:");
                 Rows = Convert.ToInt32(ReadLine());
                 WriteLine("Размерность по y:");
@@ -58,6 +58,7 @@ namespace Homework_Theme_04
             }
             for (int index=0;index< MultiplOrder.Count;index++)
             {
+                while (MultiplOrder[index].Priority.Count<N)
                 Combination(MultiplOrder[index]);
             }
         }
@@ -98,10 +99,11 @@ namespace Homework_Theme_04
                 return;
             obj.Intermediate = MatricesMultipl(obj.Intermediate, matrices[PossibleMultipl[0]]);
             obj.Priority.Add(PossibleMultipl[0]);
-            //Конечно, здесь можно почистить, но мне лень=D
-            MultiplOrder.Find(x => x.Index == obj.Index).Intermediate = obj.Intermediate;
-            MultiplOrder.Find(x => x.Index == obj.Index).Priority = obj.Priority;
-            MultiplOrder.Find(x => x.Index == obj.Index).NumbOfMultipl = obj.NumbOfMultipl;
+
+            var Obj = MultiplOrder.Find(x => x.Index == obj.Index);
+            Obj.Intermediate = obj.Intermediate;
+            Obj.Priority = obj.Priority;
+            Obj.NumbOfMultipl = obj.NumbOfMultipl;
 
         }
 
